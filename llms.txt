@@ -1,0 +1,89 @@
+# Webmarka Cookie Consent (webmarka/cookie-consent)
+
+> Cookie consent banner for Laravel 13+ (PHP 8.3+) with Google Consent Mode v2 and KVKK / GDPR compliant defaults. The UI has no dependencies (no Node.js needed on the server). Alpine.js and Tailwind CSS support is optional. MIT licensed.
+
+Repository: https://github.com/hakanispirli/webmarka-cookie-consent
+Full docs: README.md (English), README.tr.md (Turkish)
+
+## Install
+
+composer require webmarka/cookie-consent
+php artisan cookie-consent:install            # publishes config/cookie-consent.php
+php artisan cookie-consent:install --migrations  # + consent log migration (optional)
+
+## Layout (required placement)
+
+- `@cookieConsentHead`: FIRST in <head>, BEFORE Google Tag Manager / gtag.js. Prints the Consent Mode v2 defaults (all denied except security_storage), restores the stored choice synchronously, optionally prints GTM/gtag, and links the CSS.
+- `<x-cookie-consent::banner />`: before </body>. Props: layout (box|bar|modal), position (bottom-left|bottom-right|bottom|top), theme (auto|light|dark).
+- `@cookieConsentScripts`: before </body> (or in <head> before a CDN Alpine.js). Prints the JSON config and the core JS.
+- `<x-cookie-consent::preferences-button />`: in the footer, lets visitors change or withdraw consent.
+- `<x-cookie-consent::cookie-table />` (optional `category="analytics"`): cookie list for the cookie policy page.
+
+## Categories → Google Consent Mode v2
+
+necessary (always on) → security_storage
+functional → functionality_storage, personalization_storage
+analytics → analytics_storage
+marketing → ad_storage, ad_user_data, ad_personalization
+
+## Blocking third-party code until consent
+
+<script type="text/plain" data-cc-category="analytics">...</script>
+<script type="text/plain" data-cc-category="marketing" src="https://..."></script>
+<script type="text/plain" data-cc-category="analytics marketing" data-cc-require="any">...</script>
+<script type="text/plain" data-cc-type="module" data-cc-category="functional" src="..."></script>
+<iframe data-cc-src="https://..." data-cc-category="marketing"></iframe>
+<x-cookie-consent::script category="analytics">...</x-cookie-consent::script>
+
+## .env
+
+COOKIE_CONSENT_ENABLED=true
+COOKIE_CONSENT_POLICY_VERSION=1          # bump to ask everyone again
+COOKIE_CONSENT_CONTROLLER_NAME=          # data controller (veri sorumlusu)
+COOKIE_CONSENT_CONTROLLER_EMAIL=
+COOKIE_CONSENT_CONTROLLER_ADDRESS=
+COOKIE_CONSENT_PRIVACY_URL=              # URL, /path or route:name
+COOKIE_CONSENT_COOKIE_POLICY_URL=
+COOKIE_CONSENT_GTM_ID=                   # package prints GTM in the right order
+COOKIE_CONSENT_GOOGLE_TAG_IDS=           # comma separated: G-XXXX,AW-XXXX
+COOKIE_CONSENT_GOOGLE_MODE=advanced      # advanced | basic
+COOKIE_CONSENT_LOGGING=false             # consent records (needs migration)
+COOKIE_CONSENT_ASSETS=route              # route (no publish) | public
+COOKIE_CONSENT_LIFETIME=365              # days
+COOKIE_CONSENT_DOMAIN=                   # e.g. .example.com for subdomains
+
+## Config keys (config/cookie-consent.php)
+
+enabled, policy_version, cookie.{name,lifetime,domain,path,same_site,secure}, data_controller.{name,address,email}, urls.{privacy_policy,cookie_policy}, categories.<key>.{required,consent_mode[],title,description,cookies[{name,pattern,provider,purpose,duration,transfers_abroad}]}, google.consent_mode.{enabled,mode,wait_for_update,ads_data_redaction,url_passthrough,region_defaults[]}, google.{gtm_id,tag_ids[],datalayer_event}, ui.{layout,position,theme,styles,show_close_button,reload_on_withdraw}, assets.{driver,alpine}, logging.{enabled,connection,table,ip(none|anonymize|hash|full),retention_days}, route.{prefix,name,middleware,throttle}, csp_nonce
+
+## Server side
+
+@consent('marketing') ... @else ... @endconsent
+Webmarka\CookieConsent\Facades\CookieConsent::granted('analytics'); ::state(); ::hasDecided(); ::consentModeFor([...])
+(Don't use server-side checks on pages served from a full-page cache.)
+
+## JavaScript (window.CookieConsent)
+
+hasConsent(cat), hasDecided(), getState(), acceptAll(), rejectAll(), save({cat: bool}), show(), showPreferences(), hide(), reset(), on(event, cb)
+DOM events: cookie-consent:ready | updated | banner-shown | banner-hidden | preferences-shown | preferences-hidden
+dataLayer event: cookie_consent_update with cookie_consent {category: bool} and cookie_consent_action
+Any element with data-cc-action="show-preferences|accept-all|reject-all|save" works.
+Alpine: $store.cookieConsent.has('marketing'). Vite: Alpine.plugin(import of dist/cookie-consent-alpine.esm.js).
+
+## Artisan
+
+cookie-consent:install [--migrations --views --lang --assets --force]
+cookie-consent:export [path] [--from= --to= --consent-id=]
+cookie-consent:prune [--days=]
+
+## Publish tags
+
+cookie-consent-config, cookie-consent-views, cookie-consent-lang, cookie-consent-assets, cookie-consent-migrations
+
+## Do / Don't
+
+- DO keep "Reject all" as prominent as "Accept all". The default views already do this.
+- DO remove GTM's <noscript> iframe and any existing gtag('consent', ...) calls.
+- DON'T block scripts the site needs (app bundle, payments, CSRF).
+- DON'T invent the data controller's details. Ask the user.
+- This is a technical tool, not legal advice.

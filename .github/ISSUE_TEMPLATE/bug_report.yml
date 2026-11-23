@@ -1,0 +1,50 @@
+name: Bug report
+description: Something does not work as documented.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Security issues must not be reported here.** Use [SECURITY.md](https://github.com/hakanispirli/webmarka-cookie-consent/security/policy) instead.
+  - type: input
+    id: version
+    attributes:
+      label: Package version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: laravel
+    attributes:
+      label: Laravel & PHP version
+      placeholder: "Laravel 13.4, PHP 8.4"
+    validations:
+      required: true
+  - type: dropdown
+    id: frontend
+    attributes:
+      label: Frontend stack
+      multiple: true
+      options: [Plain Blade, Alpine.js, Tailwind CSS, Livewire, Inertia (Vue), Inertia (React), Bootstrap, Other]
+  - type: input
+    id: browser
+    attributes:
+      label: Browser
+      placeholder: "Chrome 140 / Safari 19"
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include steps to reproduce, the expected and the actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant configuration / layout snippet
+      render: php
+  - type: textarea
+    id: console
+    attributes:
+      label: Browser console / dataLayer output
+      render: text

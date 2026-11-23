@@ -1,0 +1,87 @@
+{
+    "name": "webmarka/cookie-consent",
+    "description": "Cookie consent for Laravel 13+ with Google Consent Mode v2 and KVKK / GDPR compliant defaults. Dependency-free UI, optional Alpine.js and Tailwind CSS support.",
+    "keywords": [
+        "cmp",
+        "consent-management",
+        "consent-mode",
+        "cookie",
+        "cookie-banner",
+        "cookie-consent",
+        "eprivacy",
+        "gdpr",
+        "google-consent-mode-v2",
+        "gtm",
+        "kvkk",
+        "laravel",
+        "laravel-package",
+        "privacy"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/hakanispirli/webmarka-cookie-consent",
+    "support": {
+        "issues": "https://github.com/hakanispirli/webmarka-cookie-consent/issues",
+        "source": "https://github.com/hakanispirli/webmarka-cookie-consent",
+        "docs": "https://github.com/hakanispirli/webmarka-cookie-consent#readme",
+        "security": "https://github.com/hakanispirli/webmarka-cookie-consent/security/policy"
+    },
+    "authors": [
+        {
+            "name": "Webmarka",
+            "homepage": "https://github.com/hakanispirli",
+            "role": "Developer"
+        }
+    ],
+    "type": "library",
+    "require": {
+        "php": "^8.3",
+        "illuminate/contracts": "^13.0",
+        "illuminate/support": "^13.0",
+        "illuminate/http": "^13.0",
+        "illuminate/database": "^13.0",
+        "illuminate/view": "^13.0",
+        "illuminate/console": "^13.0",
+        "illuminate/routing": "^13.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.20",
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^4.0|^5.0",
+        "pestphp/pest-plugin-laravel": "^4.0|^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webmarka\\CookieConsent\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Webmarka\\CookieConsent\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=1G",
+        "format": "vendor/bin/pint",
+        "format:check": "vendor/bin/pint --test"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webmarka\\CookieConsent\\CookieConsentServiceProvider"
+            ],
+            "aliases": {
+                "CookieConsent": "Webmarka\\CookieConsent\\Facades\\CookieConsent"
+            }
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

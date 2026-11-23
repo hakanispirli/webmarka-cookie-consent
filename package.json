@@ -1,0 +1,51 @@
+{
+    "name": "@webmarka/cookie-consent",
+    "version": "1.0.0",
+    "description": "Dependency-free cookie consent core with Google Consent Mode v2 support (frontend of webmarka/cookie-consent for Laravel).",
+    "license": "MIT",
+    "author": "Webmarka",
+    "homepage": "https://github.com/hakanispirli/webmarka-cookie-consent#readme",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/hakanispirli/webmarka-cookie-consent.git"
+    },
+    "bugs": {
+        "url": "https://github.com/hakanispirli/webmarka-cookie-consent/issues"
+    },
+    "keywords": [
+        "cookie-consent",
+        "consent-mode",
+        "google-consent-mode-v2",
+        "gdpr",
+        "kvkk",
+        "cookie-banner"
+    ],
+    "private": true,
+    "type": "module",
+    "main": "./dist/cookie-consent.esm.js",
+    "module": "./dist/cookie-consent.esm.js",
+    "exports": {
+        ".": "./dist/cookie-consent.esm.js",
+        "./alpine": "./dist/cookie-consent-alpine.esm.js",
+        "./css": "./dist/cookie-consent.css"
+    },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.css"
+    ],
+    "scripts": {
+        "build": "node scripts/build.mjs",
+        "dev": "node scripts/build.mjs --watch",
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest"
+    },
+    "devDependencies": {
+        "esbuild": "^0.28.2",
+        "jsdom": "^31.0.1",
+        "typescript": "^7.0.2",
+        "vitest": "^5.1.1"
+    }
+}
